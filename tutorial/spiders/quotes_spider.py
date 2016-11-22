@@ -1,4 +1,6 @@
 import scrapy
+from bs4 import BeautifulSoup
+
 
 
 class QuotesSpider(scrapy.Spider):
@@ -18,3 +20,11 @@ class QuotesSpider(scrapy.Spider):
         with open(filename, 'wb') as f:
             f.write(response.body)
         self.log('Saved file %s' % filename)
+        soup = BeautifulSoup(response.body, 'html.parser')
+        for article in soup.find_all('article'):
+            # print(len(list(articles)))
+            self.parseArticle(article)
+
+    def parseArticle(self, articles):
+        if articles.get('id') != None:
+            print(articles.select('.type-democrat .results-popular'))
