@@ -1,10 +1,12 @@
 import scrapy
 from bs4 import BeautifulSoup
-
+from database import Database
 
 
 class QuotesSpider(scrapy.Spider):
     name = "quotes"
+    def __init__(self):
+        self.database = Database()
 
     def start_requests(self):
         urls = [
@@ -28,3 +30,8 @@ class QuotesSpider(scrapy.Spider):
     def parseArticle(self, articles):
         if articles.get('id') != None:
             print(articles.select('.type-democrat .results-popular'))
+            democratPopularResult = articles.select('.type-democrat .results-popular')
+            # votes = {
+            #    "democrat": democratPopularResult
+            # }
+            self.database.set(articles.get('id') + " democrat", str(democratPopularResult))
